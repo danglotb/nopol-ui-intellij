@@ -1,5 +1,6 @@
 package plugin.task;
 
+import fr.inria.lille.repair.common.patch.Patch;
 import plugin.actors.ActorManager;
 import akka.pattern.Patterns;
 import akka.util.Timeout;
@@ -10,6 +11,7 @@ import com.intellij.openapi.ui.Messages;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import plugin.wrapper.ApplyPatchWrapper;
 import scala.concurrent.Await;
 import scala.concurrent.Future;
 
@@ -41,19 +43,23 @@ public class NoPolTask extends Task.Backgroundable {
 		}
 	}
 
-	//TODO implements Success and Cancel method
-
-
 	@Override
 	public void onError(@NotNull Exception error) {
-		super.onError(error);
+		Messages.showMessageDialog(getProject(), this.response != null ? this.response.toString() : "null", "Error", Messages.getErrorIcon());
 	}
 
 	@Override
 	public void onSuccess() {
 		super.onSuccess();
 		if (this.response instanceof List) {
-			Messages.showMessageDialog(getProject(), this.response.toString(), "Success", Messages.getInformationIcon());
+			List<Patch> patches = (List<Patch>) this.response;
+			if (patches.isEmpty())
+				Messages.showMessageDialog(getProject(), "NoPol couldn't found any fix", "Fail", Messages.getWarningIcon());
+			else {
+				ApplyPatchWrapper dialog = new ApplyPatchWrapper(getProject(), patches);
+				dialog.getPeer().setTitle("NoPol");
+				dialog.show();
+			}
 		} else
 			Messages.showMessageDialog(getProject(), this.response != null ? this.response.toString() : "null", "Error", Messages.getErrorIcon());
 	}
