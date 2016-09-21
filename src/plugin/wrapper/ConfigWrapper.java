@@ -1,24 +1,21 @@
 package plugin.wrapper;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import plugin.action.NoPolAction;
 import plugin.gui.ConfigPanel;
 
 import javax.swing.*;
 
+/**
+ * Created by bdanglot on 9/21/16.
+ */
 public class ConfigWrapper extends DialogWrapper {
-
-	private AnActionEvent event;
 
 	private static final JComponent panel = new ConfigPanel();
 
-	public ConfigWrapper(AnActionEvent event) {
-		super(true);
-		this.event = event;
+	public ConfigWrapper() {
+		super(false);
 		this.init();
 	}
 
@@ -26,16 +23,6 @@ public class ConfigWrapper extends DialogWrapper {
 	@Override
 	protected JComponent createCenterPanel() {
 		return panel;
-	}
-
-	@NotNull
-	@Override
-	protected Action[] createActions() {
-		Action[] defaultActions = super.createActions();
-		Action[] actions = new Action[defaultActions.length + 1];
-		actions[0] = new NoPolAction(this, this.event);
-		System.arraycopy(defaultActions, 0, actions, 1, defaultActions.length);
-		return actions;
 	}
 
 	@Override

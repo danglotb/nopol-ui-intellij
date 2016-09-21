@@ -1,17 +1,13 @@
 package plugin.wrapper;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.FileIndexFacade;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.*;
 import com.intellij.psi.search.EverythingGlobalScope;
-import fr.inria.lille.repair.common.config.Config;
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.nopol.SourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +19,6 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 
 import static com.intellij.testFramework.LightPlatformTestCase.getProject;
-import static plugin.Plugin.config;
 
 /**
  * Created by bdanglot on 9/21/16.

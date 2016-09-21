@@ -2,7 +2,6 @@ package plugin.gui;
 
 import plugin.actors.ActorManager;
 import fr.inria.lille.repair.common.config.Config;
-import fr.inria.lille.repair.common.synth.StatementType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +18,6 @@ public class ConfigPanel extends JPanel {
 	public ConfigPanel() {
 		this.setLayout(new GridLayout());
 		this.buildGroupSynthesis();
-		this.buildGroupType();
 		this.buildRemoteManagement();
 		this.setVisible(true);
 	}
@@ -65,38 +63,7 @@ public class ConfigPanel extends JPanel {
 		this.add(panel);
 	}
 
-	/**
-	 * Add to the Panel a Group of RadioButton for setting up Type
-	 */
-	private void buildGroupType() {
-		JRadioButton condition = new JRadioButton();
-		condition.setSelected(true);
-		condition.addActionListener(event -> config.setType(StatementType.CONDITIONAL));
 
-		JRadioButton precondition = new JRadioButton();
-		precondition.addActionListener(event -> config.setType(StatementType.PRECONDITION));
-
-		ButtonGroup groupType = new ButtonGroup();
-		groupType.add(condition);
-		groupType.add(precondition);
-
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(3, 3));
-
-		panel.add(new JLabel("Type: "));
-		panel.add(new JLabel(""));
-		panel.add(new JLabel(""));
-
-		panel.add(new JLabel("condition"));
-		panel.add(new JLabel(""));
-		panel.add(condition);
-
-		panel.add(new JLabel("pre-condition"));
-		panel.add(new JLabel(""));
-		panel.add(precondition);
-
-		this.add(panel);
-	}
 
 	/**
 	 * Add to the Panel a Group of RadioButton for setting up Synthesis
