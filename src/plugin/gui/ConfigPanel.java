@@ -102,14 +102,17 @@ public class ConfigPanel extends JPanel {
 	 * Add to the Panel a Group of RadioButton for setting up Synthesis
 	 */
 	private void buildGroupSynthesis() {
-		JRadioButton smtSynthesis = new JRadioButton();
-		smtSynthesis.setSelected(true);
-		smtSynthesis.setActionCommand(String.valueOf(Config.NopolSynthesis.SMT));
-		smtSynthesis.addActionListener(event -> config.setSynthesis(Config.NopolSynthesis.BRUTPOL));
 
 		JRadioButton dynamothSynthesis = new JRadioButton();
+		dynamothSynthesis.setSelected(true);
 		dynamothSynthesis.setActionCommand(String.valueOf(Config.NopolSynthesis.BRUTPOL));
 		dynamothSynthesis.addActionListener(event -> config.setSynthesis(Config.NopolSynthesis.BRUTPOL));
+		config.setSynthesis(Config.NopolSynthesis.BRUTPOL);
+		config.setOnlyOneSynthesisResult(false);
+
+		JRadioButton smtSynthesis = new JRadioButton();
+		smtSynthesis.setActionCommand(String.valueOf(Config.NopolSynthesis.SMT));
+		smtSynthesis.addActionListener(event -> config.setSynthesis(Config.NopolSynthesis.BRUTPOL));
 
 		ButtonGroup groupSynthesis = new ButtonGroup();
 		groupSynthesis.add(smtSynthesis);
@@ -122,13 +125,13 @@ public class ConfigPanel extends JPanel {
 		panel.add(new JLabel(""));
 		panel.add(new JLabel(""));
 
-		panel.add(new JLabel("SMT"));
-		panel.add(new JLabel(""));
-		panel.add(smtSynthesis);
-
 		panel.add(new JLabel("Dynamoth"));
 		panel.add(new JLabel(""));
 		panel.add(dynamothSynthesis);
+
+		panel.add(new JLabel("SMT"));
+		panel.add(new JLabel(""));
+		panel.add(smtSynthesis);
 
 		this.add(panel);
 	}
