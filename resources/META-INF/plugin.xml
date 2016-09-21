@@ -27,13 +27,10 @@
     <extensions defaultExtensionNs="com.intellij"></extensions>
 
     <actions>
-        <group id="nopol-plugin.NoPolMenu" text="Nopol" description="NoPol menu" popup="true">
+        <group id="nopol-plugin.NoPolMenu" text="Nopol" description="NoPol menu">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
             <action class="plugin.Plugin" id="nopol-plugin.Plugin"
-                    text="Fix me!" description="Run NoPol with the current configuration">
-            </action>
-            <action class="plugin.ConfigAction" id="nopol-plugin.ConfigAction"
-                    text="Configure NoPol..." description="Open the panel to configure NoPol">
+                    text="NoPol" description="Configure and run NoPol">
             </action>
         </group>
     </actions>
