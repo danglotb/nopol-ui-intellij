@@ -1,8 +1,7 @@
-package actors;
+package plugin.actors;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
-import akka.actor.Props;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
@@ -16,10 +15,10 @@ public class ActorManager {
     private static ActorSystem system;
     public static ActorRef remoteActor;
 
-    public static String actorSystemNopol;
+    private static String actorSystemNopol;
     public static String addressNopol;
     public static String portNopol;
-    public static String actorNopol;
+    public static String nameActorNopol;
 
     public static Config akkaConfig;
     public static Config akkaConfigNoPol;
@@ -31,17 +30,17 @@ public class ActorManager {
         actorSystemNopol = akkaConfigNoPol.getString("nopol.system.name");
         addressNopol = akkaConfigNoPol.getString("akka.remote.netty.tcp.hostname");
         portNopol = akkaConfigNoPol.getString("akka.remote.netty.tcp.port");
-        actorNopol = akkaConfigNoPol.getString("nopol.actor.name");
+        nameActorNopol = akkaConfigNoPol.getString("nopol.actor.name");
 
         system = ActorSystem.create("PluginActorSystem", akkaConfig, classLoader);
-        remoteActor = system.actorFor("akka.tcp://" + actorSystemNopol + "@" + addressNopol + ":" + portNopol + "/user/" + actorNopol);
+        remoteActor = system.actorFor("akka.tcp://" + actorSystemNopol + "@" + addressNopol + ":" + portNopol + "/user/" + nameActorNopol);
         System.out.println(remoteActor);
     }
 
     public static void buildRemoteActor(String address, String port) {
         addressNopol = address;
         portNopol = port;
-        remoteActor = system.actorFor("akka.tcp://" + actorSystemNopol + "@" + addressNopol + ":" + portNopol + "/user/" + actorNopol);
+        remoteActor = system.actorFor("akka.tcp://" + actorSystemNopol + "@" + addressNopol + ":" + portNopol + "/user/" + nameActorNopol);
         System.out.println(remoteActor);
     }
 }
