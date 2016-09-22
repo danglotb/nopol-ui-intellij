@@ -1,6 +1,8 @@
 package plugin.task;
 
 import fr.inria.lille.repair.common.patch.Patch;
+import fr.inria.lille.repair.nopol.NoFailingTestCaseException;
+import fr.inria.lille.repair.nopol.NoSuspiciousStatementException;
 import plugin.actors.ActorManager;
 import akka.pattern.Patterns;
 import akka.util.Timeout;
@@ -51,10 +53,15 @@ public class NoPolTask extends Task.Backgroundable {
 	@Override
 	public void onSuccess() {
 		super.onSuccess();
-		if (this.response instanceof List) {
+		//TODO maybe add super class
+		if (this.response instanceof NoSuspiciousStatementException ) {
+			Messages.showMessageDialog(getProject(), this.response.toString(), ((NoSuspiciousStatementException) this.response).header, Messages.getWarningIcon());
+		} else if (this.response instanceof NoFailingTestCaseException) {
+			Messages.showMessageDialog(getProject(), this.response.toString(), ((NoFailingTestCaseException) this.response).header, Messages.getWarningIcon());
+		} else if (this.response instanceof List) {
 			List<Patch> patches = (List<Patch>) this.response;
 			if (patches.isEmpty())
-				Messages.showMessageDialog(getProject(), "NoPol couldn't found any fix", "Fail", Messages.getWarningIcon());
+				Messages.showMessageDialog(getProject(), "NoPol could not found any fix", "Fail", Messages.getWarningIcon());
 			else {
 				ApplyPatchWrapper dialog = new ApplyPatchWrapper(getProject(), patches);
 				dialog.getPeer().setTitle("NoPol");
