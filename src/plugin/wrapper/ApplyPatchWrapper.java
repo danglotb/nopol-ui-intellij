@@ -1,6 +1,9 @@
 package plugin.wrapper;
 
-import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.CommandProcessor;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
@@ -8,12 +11,10 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.*;
 import com.intellij.psi.search.EverythingGlobalScope;
-import fr.inria.lille.repair.common.config.Config;
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.nopol.SourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import plugin.Plugin;
 import plugin.gui.ApplyPatchPanel;
 
 import javax.swing.*;
@@ -95,26 +96,29 @@ public class ApplyPatchWrapper extends DialogWrapper {
 				super.visitIfStatement(statement);
 			}
 		});
-
 	}
 
 	private class ApplyPatchAction extends AbstractAction {
+
 		ApplyPatchAction() {
-			super("Apply Patch");
+			super("ApplyPatch");
 		}
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			WriteCommandAction.runWriteCommandAction(getProject(), new Runnable() {
-				@Override
-				public void run() {
-					buggyExpression.replace(patchStatement);
-					PsiClass classToBeFix = JavaPsiFacade.getInstance(project).findClass(selectedPatch.getRootClassName(), new EverythingGlobalScope(project));
-					OpenFileDescriptor descriptor = new OpenFileDescriptor(project, classToBeFix.getContainingFile().getVirtualFile(), patchStatement.getTextOffset());
-					FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
-					close(0);
-				}
-			});
+			CommandProcessor.getInstance().executeCommand(getProject(), () -> ApplicationManager.getApplication().runWriteAction( () -> {
+				PsiClass classToBeFix = JavaPsiFacade.getInstance(project).findClass(selectedPatch.getRootClassName(), new EverythingGlobalScope(project));
+				OpenFileDescriptor descriptor = new OpenFileDescriptor(project, classToBeFix.getContainingFile().getVirtualFile(), buggyExpression.getTextOffset());
+				Editor editor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
+				Document modifiedDocument = editor.getDocument();
+				//Apply the patch
+				modifiedDocument.replaceString(buggyExpression.getTextOffset(), buggyExpression.getTextOffset() + buggyExpression.getTextLength(), patchStatement.getText());
+				//Move caret to modification
+				editor.getCaretModel().moveToOffset(buggyExpression.getTextOffset());
+				//Select patch
+				editor.getSelectionModel().setSelection(buggyExpression.getTextOffset(), buggyExpression.getTextOffset() + buggyExpression.getTextLength());
+				close(0);
+			}), "ApplyPatch", CommandProcessor.getInstance().getCurrentCommandGroupId());
 		}
 	}
-
 }
