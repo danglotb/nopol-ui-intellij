@@ -8,10 +8,12 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.*;
 import com.intellij.psi.search.EverythingGlobalScope;
+import fr.inria.lille.repair.common.config.Config;
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.nopol.SourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import plugin.Plugin;
 import plugin.gui.ApplyPatchPanel;
 
 import javax.swing.*;
@@ -50,10 +52,9 @@ public class ApplyPatchWrapper extends DialogWrapper {
 	@NotNull
 	@Override
 	protected Action[] createActions() {
-		Action[] defaultActions = super.createActions();
-		Action[] actions = new Action[defaultActions.length + 1];
+		Action[] actions = new Action[2];
 		actions[0] = new ApplyPatchAction();
-		System.arraycopy(defaultActions, 0, actions, 1, defaultActions.length);
+		actions[1] = this.getCancelAction();
 		return actions;
 	}
 
@@ -89,7 +90,7 @@ public class ApplyPatchWrapper extends DialogWrapper {
 				if (location.getBeginSource() == statement.getTextOffset() &&
 						location.getEndSource() == statement.getTextOffset() + statement.getTextLength() - 1) {
 					buggyExpression = statement.getCondition();
-					System.out.println("This conditional " + statement.getCondition() + " should replaced by " + selectedPatch.asString());
+					System.out.println("This conditional " + statement.getCondition().getText() + " should replaced by " + selectedPatch.asString());
 				}
 				super.visitIfStatement(statement);
 			}
