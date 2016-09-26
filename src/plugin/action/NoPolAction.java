@@ -14,11 +14,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.util.PsiUtilBase;
-import fr.inria.lille.repair.common.config.Config;
+import org.jetbrains.annotations.NotNull;
+import plugin.Ziper;
 import plugin.task.NoPolTask;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.io.*;
 
 import static plugin.Plugin.config;
 
@@ -38,49 +40,67 @@ public class NoPolAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		Project project = event.getData(PlatformDataKeys.PROJECT);
 		Editor editor = event.getData(PlatformDataKeys.EDITOR);
 		PsiFile currentFile = PsiUtilBase.getPsiFileInEditor(editor, project);
+
 		if (JavaFileType.INSTANCE != currentFile.getFileType())
 			return;
+
+		try {
+
+			File outputZip = File.createTempFile(project.getName(), ".zip");
+			Ziper ziper = new Ziper(outputZip.getAbsolutePath(), project);
+
+			//Test case
+			VirtualFile file = buildTestProject(project, editor, currentFile);
+
+			Module module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(file);
+
+			//sources folder
+			buildSources(ziper, module);
+
+			//Classpath
+			buildClasspath(ziper, module);
+
+			ProgressManager.getInstance().run(new NoPolTask(project, "NoPol is Fixing", outputZip.getAbsolutePath()));
+			ziper.close();
+			this.parent.close(0);
+		} catch (IOException e1) {
+			throw new RuntimeException(e1);
+		}
+	}
+
+	private void buildSources(Ziper ziper, Module module) {
+		VirtualFile[] rootsFolder = ModuleRootManager.getInstance(module).getSourceRoots();
+		for (int i = 0; i < rootsFolder.length; i++)
+			ziper.zipIt("src", new File(rootsFolder[i].getCanonicalPath()));
+	}
+
+	@NotNull
+	private VirtualFile buildTestProject(Project project, Editor editor, PsiFile currentFile) {
 		VirtualFile file = PsiUtilBase.getPsiFileInEditor(editor, project).getVirtualFile();
 		String fullQualifiedNameOfCurrentFile = ((PsiJavaFile) currentFile).getPackageName() + "." + currentFile.getName();
 		fullQualifiedNameOfCurrentFile = fullQualifiedNameOfCurrentFile.substring(0, fullQualifiedNameOfCurrentFile.length() - JavaFileType.DEFAULT_EXTENSION.length() - 1);
 		if (ProjectRootManager.getInstance(project).getFileIndex().isInSource(file)) {
 			config.setProjectTests(fullQualifiedNameOfCurrentFile.split(" "));
 		}
+		return file;
+	}
 
-		Module module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(file);
-
-		String srcFolder = "";
-		VirtualFile[] rootsFolder = ModuleRootManager.getInstance(module).getSourceRoots();
-		for (int i = 0; i < rootsFolder.length - 1; i++) {
-			srcFolder += rootsFolder[i].getCanonicalPath() + ":";
-		}
-		srcFolder += rootsFolder[rootsFolder.length - 1].getCanonicalPath();
-		config.setProjectSourcePath(srcFolder.split(":"));
-
-		String projectClasspath = "";//CompilerModuleExtension.getInstance(module).getCompilerOutputPath().getCanonicalPath() + ":" + CompilerModuleExtension.getInstance(module).getCompilerOutputPathForTests().getCanonicalPath();
+	private void buildClasspath(Ziper ziper, Module module) {
 		VirtualFile[] roots = ModuleRootManager.getInstance(module).orderEntries().classes().getRoots();
 		for (int i = 0; i < roots.length; i++) {
 			String pathFile = roots[i].getCanonicalPath();
-			if (!pathFile.contains("jdk"))
-				projectClasspath += (pathFile.endsWith("jar!/") ? pathFile.substring(0, pathFile.length() - 2) : pathFile) + ":";
+			if (!pathFile.contains("jdk")) {
+				if (pathFile.endsWith("jar!/")) {
+					ziper.zipIt("target", new File(pathFile.substring(0, pathFile.length() - 2)));
+				} else {
+					ziper.zipIt("target", new File(pathFile));
+				}
+			}
 		}
-
-		//TODO
-		projectClasspath += "/home/bdanglot/Documents/jdk1.7.0_80/bin/../lib/tools.jar";
-
-		config.setProjectClasspath(projectClasspath);
-
-		//TODO fix this for remoting NoPol
-		if (config.getSynthesis() == Config.NopolSynthesis.SMT) {
-			config.setSolver(Config.NopolSolver.Z3);
-		}
-
-		ProgressManager.getInstance().run(new NoPolTask(project, "NoPol is Fixing"));
-
-		this.parent.close(0);
 	}
+
+
 }
