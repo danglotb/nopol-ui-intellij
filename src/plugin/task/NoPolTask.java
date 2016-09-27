@@ -11,6 +11,8 @@ import fr.inria.lille.repair.actor.ConfigActor;
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.nopol.NoFailingTestCaseException;
 import fr.inria.lille.repair.nopol.NoSuspiciousStatementException;
+import org.intellij.lang.annotations.Flow;
+import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,6 +23,7 @@ import scala.concurrent.Await;
 import scala.concurrent.Future;
 
 import javax.swing.*;
+import java.awt.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -46,9 +49,18 @@ public class NoPolTask extends Task.Backgroundable {
 
 	private final Runnable runnerFancyRobot = () -> {
 		this.frame = new JFrame();
+		this.frame.getContentPane().setLayout(new BorderLayout());
 		JLabel imageLabel = new JLabel();
 		imageLabel.setIcon(new ImageIcon(this.getClass().getResource("/giphy.gif")));
-		this.frame.getContentPane().add(imageLabel);
+		JLabel header = new JLabel("NoPol is searching a patch");
+		JPanel panel = new JPanel();
+		panel.setLayout(new FlowLayout());
+		panel.add(header);
+		panel.add(new JLabel());
+		panel.add(new JLabel());
+		panel.add(new JLabel());
+		this.frame.getContentPane().add(panel, BorderLayout.NORTH);
+		this.frame.getContentPane().add(imageLabel, BorderLayout.CENTER);
 		this.frame.setVisible(true);
 		this.frame.setLocationRelativeTo(null);
 		this.frame.pack();
