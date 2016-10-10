@@ -137,7 +137,7 @@ public class ApplyPatchWrapper extends DialogWrapper {
 						(selectedPatch.getType() == StatementType.CONDITIONAL ? buggyElement.getTextLength() : patch.length()));
 				PsiDocumentManager.getInstance(project).commitDocument(modifiedDocument);
 				CodeStyleManager.getInstance(project).reformat(PsiDocumentManager.getInstance(project).getPsiFile(modifiedDocument), false);
-			}), "ApplyPatch", DocCommandGroupId.noneGroupId(modifiedDocument));
+			}), "Apply Patch", DocCommandGroupId.noneGroupId(modifiedDocument));
 
 			PsiDocumentManager.getInstance(project).commitDocument(modifiedDocument);
 

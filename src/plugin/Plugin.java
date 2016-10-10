@@ -11,6 +11,8 @@ import plugin.wrapper.LauncherWrapper;
  */
 public class Plugin extends AnAction {
 
+	public static boolean enableFancyRobot = true;
+
 	public static final Config config = new Config();
 
 	public Plugin() {

@@ -1,7 +1,8 @@
 package plugin.gui;
 
-import plugin.actors.ActorManager;
 import fr.inria.lille.repair.common.config.Config;
+import plugin.Plugin;
+import plugin.actors.ActorManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +20,7 @@ public class ConfigPanel extends JPanel {
 		this.setLayout(new GridLayout());
 		this.buildGroupSynthesis();
 		this.buildRemoteManagement();
+		this.buildPanelFancyRobot();
 		this.setVisible(true);
 	}
 
@@ -64,7 +66,6 @@ public class ConfigPanel extends JPanel {
 	}
 
 
-
 	/**
 	 * Add to the Panel a Group of RadioButton for setting up Synthesis
 	 */
@@ -99,6 +100,15 @@ public class ConfigPanel extends JPanel {
 		panel.add(smtSynthesis);
 
 		this.add(panel);
+	}
+
+	private void buildPanelFancyRobot() {
+		JCheckBox enableFancyRobot = new JCheckBox("enable Fancy Robot");
+		enableFancyRobot.setSelected(true);
+		enableFancyRobot.addActionListener(e -> Plugin.enableFancyRobot = enableFancyRobot.isSelected());
+		JPanel panelRobot = new JPanel();
+		panelRobot.add(enableFancyRobot);
+		this.add(panelRobot);
 	}
 
 }
