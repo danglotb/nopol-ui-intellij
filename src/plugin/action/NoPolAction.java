@@ -14,13 +14,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.util.PsiUtilBase;
-import org.jetbrains.annotations.NotNull;
 import plugin.Ziper;
 import plugin.task.NoPolTask;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 import static plugin.Plugin.config;
 
@@ -48,14 +48,10 @@ public class NoPolAction extends AbstractAction {
 			return;
 
 		try {
-
 			File outputZip = File.createTempFile(project.getName(), ".zip");
-			Ziper ziper = new Ziper(outputZip.getAbsolutePath(), project);
-
-			//Test case
 			VirtualFile file = buildTestProject(project, editor, currentFile);
-
 			Module module = ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(file);
+			Ziper ziper = new Ziper(outputZip.getAbsolutePath(), project);
 
 			//sources folder
 			buildSources(ziper, module);
@@ -77,13 +73,22 @@ public class NoPolAction extends AbstractAction {
 			ziper.zipIt("src", new File(rootsFolder[i].getCanonicalPath()));
 	}
 
-	@NotNull
+	/**
+	 * This method is responsible to add the current test case, if the current file is, otherwise it
+	 * it will send a empty array of String in that way nopol will run all tests cases
+	 * @param project
+	 * @param editor
+	 * @param currentFile
+	 * @return
+	 */
 	private VirtualFile buildTestProject(Project project, Editor editor, PsiFile currentFile) {
 		VirtualFile file = PsiUtilBase.getPsiFileInEditor(editor, project).getVirtualFile();
 		String fullQualifiedNameOfCurrentFile = ((PsiJavaFile) currentFile).getPackageName() + "." + currentFile.getName();
 		fullQualifiedNameOfCurrentFile = fullQualifiedNameOfCurrentFile.substring(0, fullQualifiedNameOfCurrentFile.length() - JavaFileType.DEFAULT_EXTENSION.length() - 1);
-		if (ProjectRootManager.getInstance(project).getFileIndex().isInSource(file)) {
+		if (ProjectRootManager.getInstance(project).getFileIndex().isInTestSourceContent(file)) {
 			config.setProjectTests(fullQualifiedNameOfCurrentFile.split(" "));
+		} else {
+			config.setProjectTests(new String[0]);// we will hit all the test case in the project
 		}
 		return file;
 	}
