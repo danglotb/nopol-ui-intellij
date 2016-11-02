@@ -73,8 +73,8 @@ public class ConfigPanel extends JPanel {
 
 		JRadioButton dynamothSynthesis = new JRadioButton();
 		dynamothSynthesis.setSelected(true);
-		dynamothSynthesis.setActionCommand(String.valueOf(Config.NopolSynthesis.BRUTPOL));
-		dynamothSynthesis.addActionListener(event -> config.setSynthesis(Config.NopolSynthesis.BRUTPOL));
+		dynamothSynthesis.setActionCommand(String.valueOf(Config.NopolSynthesis.DYNAMOTH));
+		dynamothSynthesis.addActionListener(event -> config.setSynthesis(Config.NopolSynthesis.DYNAMOTH));
 
 		JRadioButton smtSynthesis = new JRadioButton();
 		smtSynthesis.setActionCommand(String.valueOf(Config.NopolSynthesis.SMT));

@@ -18,7 +18,8 @@ public class Plugin extends AnAction {
 	public Plugin() {
 		super("NoPol");
 		ActorManager.createActorSystem(getClass().getClassLoader());
-		config.setSynthesis(Config.NopolSynthesis.BRUTPOL);
+		config.setSynthesis(Config.NopolSynthesis.DYNAMOTH);
+		config.setLocalizer(Config.NopolLocalizer.OCHIAI);
 	}
 
 	@Override
