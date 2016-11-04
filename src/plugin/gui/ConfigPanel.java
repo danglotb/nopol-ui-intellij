@@ -1,7 +1,9 @@
 package plugin.gui;
 
+import com.intellij.openapi.project.Project;
 import fr.inria.lille.repair.common.config.Config;
 import plugin.Plugin;
+import plugin.action.ActionGenerator;
 import plugin.actors.ActorManager;
 
 import javax.swing.*;
@@ -16,7 +18,11 @@ import static plugin.Plugin.config;
  */
 public class ConfigPanel extends JPanel {
 
-	public ConfigPanel() {
+
+	private final Project project;
+
+	public ConfigPanel(Project project) {
+		this.project = project;
 		this.setLayout(new GridLayout());
 		this.buildGroupSynthesis();
 		this.buildRemoteManagement();
@@ -106,8 +112,12 @@ public class ConfigPanel extends JPanel {
 		JCheckBox enableFancyRobot = new JCheckBox("enable Fancy Robot");
 		enableFancyRobot.setSelected(true);
 		enableFancyRobot.addActionListener(e -> Plugin.enableFancyRobot = enableFancyRobot.isSelected());
+		JButton generator = new JButton("Generate Toy Project");
+		generator.addActionListener(new ActionGenerator(project));
 		JPanel panelRobot = new JPanel();
+		panelRobot.setLayout(new GridLayout(2, 1));
 		panelRobot.add(enableFancyRobot);
+		panelRobot.add(generator);
 		this.add(panelRobot);
 	}
 

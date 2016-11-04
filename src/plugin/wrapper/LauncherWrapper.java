@@ -10,6 +10,7 @@ import plugin.gui.LaunchPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 public class LauncherWrapper extends DialogWrapper {
 
@@ -38,7 +39,8 @@ public class LauncherWrapper extends DialogWrapper {
 		actions[2] = new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ConfigWrapper dialog = new ConfigWrapper();
+				System.out.println(new File(event.getProject().getBasePath() + "/toy-project/").exists());
+				ConfigWrapper dialog = new ConfigWrapper(event.getProject());
 				dialog.getPeer().setTitle("NoPol: Preferences");
 				dialog.show();
 			}

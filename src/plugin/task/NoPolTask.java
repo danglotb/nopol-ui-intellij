@@ -11,8 +11,6 @@ import fr.inria.lille.repair.actor.ConfigActor;
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.nopol.NoFailingTestCaseException;
 import fr.inria.lille.repair.nopol.NoSuspiciousStatementException;
-import org.intellij.lang.annotations.Flow;
-import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

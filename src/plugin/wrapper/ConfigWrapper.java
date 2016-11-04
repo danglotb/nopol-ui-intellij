@@ -1,5 +1,6 @@
 package plugin.wrapper;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import org.jetbrains.annotations.Nullable;
@@ -12,10 +13,11 @@ import javax.swing.*;
  */
 public class ConfigWrapper extends DialogWrapper {
 
-	private static final JComponent panel = new ConfigPanel();
+	private final JComponent panel;
 
-	public ConfigWrapper() {
+	public ConfigWrapper(Project project) {
 		super(false);
+		this.panel = new ConfigPanel(project);
 		this.init();
 	}
 
