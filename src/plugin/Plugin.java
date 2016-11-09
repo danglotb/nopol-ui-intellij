@@ -1,5 +1,6 @@
 package plugin;
 
+import fr.inria.lille.repair.common.synth.StatementType;
 import plugin.actors.ActorManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -19,6 +20,7 @@ public class Plugin extends AnAction {
 		super("NoPol");
 		ActorManager.createActorSystem(getClass().getClassLoader());
 		config.setSynthesis(Config.NopolSynthesis.DYNAMOTH);
+		config.setType(StatementType.PRE_THEN_COND);
 		config.setLocalizer(Config.NopolLocalizer.OCHIAI);
 	}
 

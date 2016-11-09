@@ -22,8 +22,9 @@ public class ActorManager {
 
     public static Config akkaConfig;
     public static Config akkaConfigNoPol;
+	public static boolean runNopolLocally;
 
-    public static void createActorSystem(ClassLoader classLoader) {
+	public static void createActorSystem(ClassLoader classLoader) {
         akkaConfigNoPol = ConfigFactory.load(classLoader, "nopol");
         akkaConfig = ConfigFactory.load(classLoader, "common");
 
