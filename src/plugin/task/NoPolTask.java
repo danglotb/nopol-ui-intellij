@@ -66,6 +66,9 @@ public class NoPolTask extends Task.Backgroundable {
 
 	@Override
 	public void run(@NotNull ProgressIndicator progressIndicator) {
+		if (!ActorManager.nopolIsRunning) {
+			ActorManager.launchNopol();
+		}
 		Timeout timeout = new Timeout(200000);
 		try {
 			ConfigActor configActor = new ConfigActor(config, Files.readAllBytes(Paths.get(outputZip)));
@@ -89,10 +92,8 @@ public class NoPolTask extends Task.Backgroundable {
 	@Override
 	public void onSuccess() {
 		super.onSuccess();
-
 		if (Plugin.enableFancyRobot)
 			this.frame.dispose();
-
 		if (this.response instanceof NoSuspiciousStatementException) {
 			Messages.showMessageDialog(getProject(), this.response.toString(), ((NoSuspiciousStatementException) this.response).header, Messages.getWarningIcon());
 		} else if (this.response instanceof NoFailingTestCaseException) {
