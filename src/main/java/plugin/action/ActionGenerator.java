@@ -22,7 +22,6 @@ public class ActionGenerator implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-
 				final File fdRootModule = new File(this.BASE_PATH_TOY_PROJECT);
 				fdRootModule.mkdir();
 				final File srcFolder = new File(this.BASE_PATH_TOY_PROJECT + "/src");

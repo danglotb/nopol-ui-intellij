@@ -1,0 +1,17 @@
+language: java
+
+jdk: oraclejdk8
+
+cache:
+  directories:
+  - .autoconf
+  - $HOME/.m2
+  - lib/ #IDEA installation
+
+install:
+  - chmod +x .travis_install.sh
+  - ./.travis_install.sh
+
+script:
+  - chmod +x .travis_build.sh
+  - ./.travis_build.sh

@@ -1,14 +1,11 @@
 package plugin.gui;
 
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.psi.search.PsiShortNamesCache;
 import fr.inria.lille.repair.common.patch.Patch;
 import plugin.wrapper.ApplyPatchWrapper;
 
 import javax.swing.*;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by bdanglot on 9/20/16.
