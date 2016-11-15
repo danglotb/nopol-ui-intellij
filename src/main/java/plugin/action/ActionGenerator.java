@@ -3,6 +3,7 @@ package plugin.action;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
+import plugin.Counter;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,6 +38,7 @@ public class ActionGenerator implements ActionListener {
 			}
 			project.getBaseDir().refresh(false, true);
 			buildModule();
+			Counter.send(Counter.TOY_PROJECT);
 		}
 
 		private void buildModule() {
