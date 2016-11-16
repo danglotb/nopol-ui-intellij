@@ -37,7 +37,7 @@ public class Plugin extends AnAction {
             e.printStackTrace();
         }
         initConfig();
-        Counter.send(Counter.START);
+        EventSender.send(EventSender.Event.START_PLUGIN);
     }
 
     private void initConfig() {
