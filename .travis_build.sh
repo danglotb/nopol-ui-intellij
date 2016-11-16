@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-./gradlew dist
+./gradlew buildPlugin
 
 cd build/distributions
 unzip "nopol-ui-intellij.zip"
