@@ -1,3 +1,5 @@
+package nopol_example;
+
 public class NopolExample {
 
 	/*

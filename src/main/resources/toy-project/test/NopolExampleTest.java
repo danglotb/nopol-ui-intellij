@@ -1,3 +1,5 @@
+package nopol_example;
+
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;

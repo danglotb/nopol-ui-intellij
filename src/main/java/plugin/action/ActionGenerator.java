@@ -26,12 +26,11 @@ public class ActionGenerator implements ActionListener {
 				fdRootModule.mkdir();
 				final File srcFolder = new File(this.BASE_PATH_TOY_PROJECT + "/src");
 				srcFolder.mkdir();
-				new File(this.BASE_PATH_TOY_PROJECT + "/src/nopol_example").mkdir();
+				new File(this.BASE_PATH_TOY_PROJECT + "/src/nopol_example/").mkdir();
 				final File testFolder = new File(this.BASE_PATH_TOY_PROJECT + "/test");
 				testFolder.mkdir();
-				new File(this.BASE_PATH_TOY_PROJECT + "/test/nopol_example").mkdir();
+				new File(this.BASE_PATH_TOY_PROJECT + "/test/nopol_example/").mkdir();
 				copyFileFromResources("/toy-project/toy-project.iml.resource", this.BASE_PATH_TOY_PROJECT + "/toy-project.iml");
-				System.out.println(new File(this.BASE_PATH_TOY_PROJECT + "/toy-project.iml").exists());
 			} catch (Exception ignored) {
 				ignored.printStackTrace();
 			}
@@ -52,12 +51,6 @@ public class ActionGenerator implements ActionListener {
 				try {
 					ModuleManager.getInstance(project).loadModule(this.BASE_PATH_TOY_PROJECT + "/toy-project.iml");
 					project.getBaseDir().refresh(false, true);
-
-					/* we would like to add the new module as a maven module, but  MavenProjectsManager.getInstance(project) return null*/
-//					VirtualFile fileToSelect = LocalFileSystem.getInstance().findFileByIoFile(new File(this.BASE_PATH_TOY_PROJECT + "/pom.xml"));
-//					final MavenProjectsManager manager = MavenProjectsManager.getInstance(project);
-//					manager.addManagedFiles(Collections.singletonList(fileToSelect));
-
 				} catch (Exception ignored) {
 					ignored.printStackTrace();
 				}
