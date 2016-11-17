@@ -9,12 +9,10 @@ import plugin.wrapper.LauncherWrapper;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Properties;
 
 /**
- * Created by bdanglot on 9/15/16.
+ * Created by Benjamin DANGLOT (benjamin.danglot@inria.fr) on 9/15/16.
  */
 public class Plugin extends AnAction {
 
@@ -31,10 +29,8 @@ public class Plugin extends AnAction {
         ActorManager.createActorSystem(getClass().getClassLoader());
         try {
             properties.load(new FileInputStream(new File(Plugin.class.getClassLoader().getResource(CONFIG_PATHNAME).toURI())));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         initConfig();
         EventSender.send(EventSender.Event.START_PLUGIN);

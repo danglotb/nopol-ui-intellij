@@ -4,7 +4,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by bdanglot on 11/10/16.
+ * Created by Benjamin DANGLOT (benjamin.danglot@inria.fr)
  *
  * EventSender is responsible to communicate usage of the plugin to build statistic.
  * It sends only GET http request at the address specified in the config.properties.
