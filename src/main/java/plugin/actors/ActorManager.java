@@ -4,10 +4,13 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import plugin.Plugin;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * Created by bdanglot on 9/12/16.
@@ -25,7 +28,7 @@ public class ActorManager {
 	public static Config akkaConfig;
 	public static Config akkaConfigNoPol;
 
-	public static boolean runNopolLocally;
+	public static boolean runNopolLocally = true;
 	public static boolean nopolIsRunning = false;
 
 	public static void createActorSystem(ClassLoader classLoader) {
@@ -49,11 +52,16 @@ public class ActorManager {
 		System.out.println(remoteActor);
 	}
 
+	private static final String CONFIG_PATHNAME = "config.properties";
+
 	public static void launchNopol() {
 		try {
-			final String pathToNopolJar = new File(ActorManager.class.getResource("/lib/nopol-0.2-SNAPSHOT-allinone.jar").getPath()).getCanonicalPath();
-			final String pathToToolsJar = new File(ActorManager.class.getResource("/lib/tools.jar").getPath()).getCanonicalPath();
-			final String fullQualifiedNameMain = "fr.inria.lille.repair.actor.NoPolActor";
+
+			Properties properties = new Properties();
+			properties.load(new FileInputStream(new File(Plugin.class.getClassLoader().getResource(CONFIG_PATHNAME).toURI())));
+			final String pathToNopolJar = new File(ActorManager.class.getResource(String.valueOf(properties.get("pathToNopolServerJar"))).getPath()).getCanonicalPath();
+			final String pathToToolsJar = System.getProperty("java.home")  + "/../lib/tools.jar";
+			final String fullQualifiedNameMain = String.valueOf(properties.get("fullQualifiedOfMainClass"));
 			final String cmd = "java -cp " + pathToToolsJar + ":" + pathToNopolJar + " " + fullQualifiedNameMain;
 			final Process nopolProcess = Runtime.getRuntime().exec(cmd);
 			nopolIsRunning = true;

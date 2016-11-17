@@ -1,5 +1,8 @@
 package plugin.task;
 
+import actor.ConfigActor;
+import actor.ConfigActorImpl;
+import akka.actor.ActorRef;
 import akka.pattern.Patterns;
 import akka.util.Timeout;
 import com.intellij.openapi.application.ApplicationManager;
@@ -7,7 +10,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import fr.inria.lille.repair.actor.ConfigActor;
+
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.nopol.NoFailingTestCaseException;
 import fr.inria.lille.repair.nopol.NoSuspiciousStatementException;
@@ -67,13 +70,13 @@ public class NoPolTask extends Task.Backgroundable {
 
 	@Override
 	public void run(@NotNull ProgressIndicator progressIndicator) {
-		if (!ActorManager.nopolIsRunning) {
+		if (!ActorManager.nopolIsRunning && ActorManager.runNopolLocally) {
 			ActorManager.launchNopol();
 		}
 		Timeout timeout = new Timeout(200000);
 		EventSender.send(EventSender.Event.REPAIR_ATTEMPT);
 		try {
-			ConfigActor configActor = new ConfigActor(config, Files.readAllBytes(Paths.get(outputZip)));
+			ConfigActor configActor = new ConfigActorImpl(config, Files.readAllBytes(Paths.get(outputZip)));
 			this.future = Patterns.ask(ActorManager.remoteActor, configActor, timeout);
 			if (Plugin.enableFancyRobot) {
 				ApplicationManager.getApplication().invokeLater(runnerFancyRobot);
