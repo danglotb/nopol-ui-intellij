@@ -17,20 +17,6 @@ import java.util.Properties;
  */
 public class ActorManager {
 
-	private static ActorSystem system;
-	public static ActorRef remoteActor;
-
-	private static String actorSystemNopol;
-	public static String addressNopol;
-	public static String portNopol;
-	public static String nameActorNopol;
-
-	public static Config akkaConfig;
-	public static Config akkaConfigNoPol;
-
-	public static boolean runNopolLocally = true;
-	public static boolean nopolIsRunning = false;
-
 	public static void createActorSystem(ClassLoader classLoader) {
 		akkaConfigNoPol = ConfigFactory.load(classLoader, "nopol");
 		akkaConfig = ConfigFactory.load(classLoader, "common");
@@ -52,18 +38,13 @@ public class ActorManager {
 		System.out.println(remoteActor);
 	}
 
-	private static final String CONFIG_PATHNAME = "config.properties";
-
 	public static void launchNopol() {
 		try {
-
-			Properties properties = new Properties();
-			properties.load(new FileInputStream(new File(Plugin.class.getClassLoader().getResource(CONFIG_PATHNAME).toURI())));
-			final String pathToNopolJar = new File(ActorManager.class.getResource(String.valueOf(properties.get("pathToNopolServerJar"))).getPath()).getCanonicalPath();
+			final String pathToNopolJar = new File(ActorManager.class.getResource(String.valueOf(Plugin.properties.get("pathToNopolServerJar"))).getPath()).getCanonicalPath();
 			final String pathToToolsJar = System.getProperty("java.home")  + "/../lib/tools.jar";
-			final String fullQualifiedNameMain = String.valueOf(properties.get("fullQualifiedOfMainClass"));
+			final String fullQualifiedNameMain = String.valueOf(Plugin.properties.get("fullQualifiedOfMainClass"));
 			final String cmd = "java -cp " + pathToToolsJar + ":" + pathToNopolJar + " " + fullQualifiedNameMain;
-			final Process nopolProcess = Runtime.getRuntime().exec(cmd);
+			nopolProcess = Runtime.getRuntime().exec(cmd);
 			nopolIsRunning = true;
 			new Thread() {
 				@Override
@@ -89,4 +70,25 @@ public class ActorManager {
 		}
 	}
 
+
+	public static void stopNopoolLocally() {
+		runNopolLocally = false;
+		nopolIsRunning = false;
+		nopolProcess.destroy();
+	}
+
+	private static ActorSystem system;
+	public static ActorRef remoteActor;
+
+	private static String actorSystemNopol;
+	public static String addressNopol;
+	public static String portNopol;
+	public static String nameActorNopol;
+
+	public static Config akkaConfig;
+	public static Config akkaConfigNoPol;
+
+	public static boolean runNopolLocally = true;
+	public static boolean nopolIsRunning = false;
+	private static Process nopolProcess;
 }

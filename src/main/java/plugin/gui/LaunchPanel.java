@@ -51,7 +51,7 @@ public class LaunchPanel extends JPanel {
 		JTextField adrCustom = new JTextField();
 		adrCustom.setText("127.0.0.1:2552");
 		customButton.addActionListener(event -> {
-			ActorManager.runNopolLocally = false;
+			ActorManager.stopNopoolLocally();
 			String[] input = adrCustom.getText().split(":");
 			ActorManager.buildRemoteActor(input[0], input[1]);
 		});
@@ -66,7 +66,7 @@ public class LaunchPanel extends JPanel {
 		JPanel panelInria = new JPanel();
 		JRadioButton buttonInria = new JRadioButton();
 		buttonInria.addActionListener(event -> {
-			ActorManager.runNopolLocally = false;
+			ActorManager.stopNopoolLocally();
 			ActorManager.addressNopol = ActorManager.akkaConfigNoPol.getString("akka.remote.netty.tcp.hostname");
 			ActorManager.portNopol = ActorManager.akkaConfigNoPol.getString("akka.remote.netty.tcp.port");
 		});
