@@ -17,78 +17,69 @@ import java.util.Properties;
  */
 public class ActorManager {
 
-	public static void createActorSystem(ClassLoader classLoader) {
-		akkaConfigNoPol = ConfigFactory.load(classLoader, "nopol");
-		akkaConfig = ConfigFactory.load(classLoader, "common");
+    public static void createActorSystem(ClassLoader classLoader) {
+        akkaConfigNoPol = ConfigFactory.load(classLoader, "nopol");
+        akkaConfig = ConfigFactory.load(classLoader, "common");
 
-		actorSystemNopol = akkaConfigNoPol.getString("nopol.system.name");
-		addressNopol = akkaConfigNoPol.getString("akka.remote.netty.tcp.hostname");
-		portNopol = akkaConfigNoPol.getString("akka.remote.netty.tcp.port");
-		nameActorNopol = akkaConfigNoPol.getString("nopol.actor.name");
+        actorSystemNopol = akkaConfigNoPol.getString("nopol.system.name");
+        addressNopol = akkaConfigNoPol.getString("akka.remote.netty.tcp.hostname");
+        portNopol = akkaConfigNoPol.getString("akka.remote.netty.tcp.port");
+        nameActorNopol = akkaConfigNoPol.getString("nopol.actor.name");
 
-		system = ActorSystem.create("PluginActorSystem", akkaConfig, classLoader);
-		remoteActor = system.actorFor("akka.tcp://" + actorSystemNopol + "@" + addressNopol + ":" + portNopol + "/user/" + nameActorNopol);
-		System.out.println(remoteActor);
-	}
+        system = ActorSystem.create("PluginActorSystem", akkaConfig, classLoader);
+        remoteActor = system.actorFor("akka.tcp://" + actorSystemNopol + "@" + addressNopol + ":" + portNopol + "/user/" + nameActorNopol);
+        System.out.println(remoteActor);
+    }
 
-	public static void buildRemoteActor(String address, String port) {
-		addressNopol = address;
-		portNopol = port;
-		remoteActor = system.actorFor("akka.tcp://" + actorSystemNopol + "@" + addressNopol + ":" + portNopol + "/user/" + nameActorNopol);
-		System.out.println(remoteActor);
-	}
+    public static void buildRemoteActor(String address, String port) {
+        addressNopol = address;
+        portNopol = port;
+        remoteActor = system.actorFor("akka.tcp://" + actorSystemNopol + "@" + addressNopol + ":" + portNopol + "/user/" + nameActorNopol);
+        System.out.println(remoteActor);
+    }
 
-	public static void launchNopol() {
-		try {
-			final String pathToNopolJar = new File(ActorManager.class.getResource(String.valueOf(Plugin.properties.get("pathToNopolServerJar"))).getPath()).getCanonicalPath();
-			final String pathToToolsJar = System.getProperty("java.home")  + "/../lib/tools.jar";
-			final String fullQualifiedNameMain = String.valueOf(Plugin.properties.get("fullQualifiedOfMainClass"));
-			final String cmd = "java -cp " + pathToToolsJar + ":" + pathToNopolJar + " " + fullQualifiedNameMain;
-			nopolProcess = Runtime.getRuntime().exec(cmd);
-			nopolIsRunning = true;
-			new Thread() {
-				@Override
-				public void run() {
-					System.out.println("Running Thread");
-					final InputStream output = nopolProcess.getInputStream();
-					final InputStream errorStream = nopolProcess.getErrorStream();
-					int read;
-					try {
-						while (nopolIsRunning) {
-							while ((read = output.read()) != -1)
-								System.out.print((char) read);
-							while ((read = errorStream.read()) != -1)
-								System.out.print((char) read);
-						}
-					} catch (IOException ignored) {
-
-					}
-				}
-			}.start();
-			Thread.sleep(5000);
-		} catch (Exception ignored) {
-		}
-	}
+    public static void launchNopol() {
+        try {
+            final String pathToNopolJar = new File(ActorManager.class.getResource(String.valueOf(Plugin.properties.get("pathToNopolServerJar"))).getPath()).getCanonicalPath();
+            final String pathToToolsJar = System.getProperty("java.home") + "/../lib/tools.jar";
+            final String fullQualifiedNameMain = String.valueOf(Plugin.properties.get("fullQualifiedOfMainClass"));
+            final String cmd = "java -cp " + pathToToolsJar + ":" + pathToNopolJar + " " + fullQualifiedNameMain;
+            nopolProcess = Runtime.getRuntime().exec(cmd);
+            nopolIsRunning = true;
+            Thread.sleep(3000);
+        } catch (Exception ignored) {
+            nopolIsRunning = false;
+            //should give to the client the reason that we could not run nopol locally
+        }
+    }
 
 
-	public static void stopNopoolLocally() {
-		runNopolLocally = false;
-		nopolIsRunning = false;
-		nopolProcess.destroy();
-	}
+    public static void stopNopolLocally() {
+        if (nopolIsRunning) {
+            System.err.println("Stopping nopol locally");
+            runNopolLocally = false;
+            nopolIsRunning = false;
+            nopolProcess.destroy();
+            try {
+                nopolProcess.waitFor();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
-	private static ActorSystem system;
-	public static ActorRef remoteActor;
+    private static ActorSystem system;
+    public static ActorRef remoteActor;
 
-	private static String actorSystemNopol;
-	public static String addressNopol;
-	public static String portNopol;
-	public static String nameActorNopol;
+    private static String actorSystemNopol;
+    public static String addressNopol;
+    public static String portNopol;
+    public static String nameActorNopol;
 
-	public static Config akkaConfig;
-	public static Config akkaConfigNoPol;
+    public static Config akkaConfig;
+    public static Config akkaConfigNoPol;
 
-	public static boolean runNopolLocally = true;
-	public static boolean nopolIsRunning = false;
-	private static Process nopolProcess;
+    public static boolean runNopolLocally = true;
+    public static boolean nopolIsRunning = false;
+    private static Process nopolProcess;
 }
