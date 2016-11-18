@@ -1,5 +1,8 @@
 package plugin;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerAdapter;
 import fr.inria.lille.repair.common.synth.StatementType;
 import plugin.actors.ActorManager;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -27,12 +30,19 @@ public class Plugin extends AnAction {
     public Plugin() {
         super("NoPol");
         ActorManager.createActorSystem(getClass().getClassLoader());
+        ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
+            @Override
+            public void projectClosed(Project project) {
+                ActorManager.stopNopolLocally();
+            }
+        });
         try {
             properties.load(new FileInputStream(new File(Plugin.class.getClassLoader().getResource(CONFIG_PATHNAME).toURI())));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         initConfig();
+        ActorManager.launchNopol();
         EventSender.send(EventSender.Event.START_PLUGIN);
     }
 

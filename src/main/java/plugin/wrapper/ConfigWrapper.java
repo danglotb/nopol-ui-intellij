@@ -29,20 +29,17 @@ public class ConfigWrapper extends DialogWrapper {
 
 	@Override
 	protected void doOKAction() {
-		//TODO Apply effectively changes
 		super.doOKAction();
 	}
 
 	@Nullable
 	@Override
 	protected ValidationInfo doValidate() {
-		//TODO Apply effectively changes
 		return super.doValidate();
 	}
 
 	@Override
 	public void doCancelAction() {
-		//TODO CancelAllChanges
 		super.doCancelAction();
 	}
 }

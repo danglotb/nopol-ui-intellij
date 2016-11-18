@@ -1,5 +1,8 @@
 package plugin.task;
 
+import actor.ConfigActor;
+import actor.ConfigActorImpl;
+import akka.actor.ActorRef;
 import akka.pattern.Patterns;
 import akka.util.Timeout;
 import com.intellij.openapi.application.ApplicationManager;
@@ -7,7 +10,7 @@ import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import fr.inria.lille.repair.actor.ConfigActor;
+
 import fr.inria.lille.repair.common.patch.Patch;
 import fr.inria.lille.repair.nopol.NoFailingTestCaseException;
 import fr.inria.lille.repair.nopol.NoSuspiciousStatementException;
@@ -67,10 +70,13 @@ public class NoPolTask extends Task.Backgroundable {
 
 	@Override
 	public void run(@NotNull ProgressIndicator progressIndicator) {
+		if (ActorManager.runNopolLocally) {
+			ActorManager.launchNopol();
+		}
 		Timeout timeout = new Timeout(200000);
 		EventSender.send(EventSender.Event.REPAIR_ATTEMPT);
 		try {
-			ConfigActor configActor = new ConfigActor(config, Files.readAllBytes(Paths.get(outputZip)));
+			ConfigActor configActor = new ConfigActorImpl(config, Files.readAllBytes(Paths.get(outputZip)));
 			this.future = Patterns.ask(ActorManager.remoteActor, configActor, timeout);
 			if (Plugin.enableFancyRobot) {
 				ApplicationManager.getApplication().invokeLater(runnerFancyRobot);
@@ -91,10 +97,8 @@ public class NoPolTask extends Task.Backgroundable {
 	@Override
 	public void onSuccess() {
 		super.onSuccess();
-
 		if (Plugin.enableFancyRobot)
 			this.frame.dispose();
-
 		if (this.response instanceof NoSuspiciousStatementException) {
 			Messages.showMessageDialog(getProject(), this.response.toString(), ((NoSuspiciousStatementException) this.response).header, Messages.getWarningIcon());
 		} else if (this.response instanceof NoFailingTestCaseException) {

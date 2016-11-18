@@ -7,4 +7,4 @@ unzip "nopol-ui-intellij.zip"
 cd nopol-ui-intellij/lib
 count=$(ls | wc -l)
 
-[[ "$count" == 9 ]]
+[[ "$count" == 10 ]]
