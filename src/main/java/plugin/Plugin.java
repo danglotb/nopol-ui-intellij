@@ -42,6 +42,7 @@ public class Plugin extends AnAction {
             throw new RuntimeException(e);
         }
         initConfig();
+        ActorManager.launchNopol();
         EventSender.send(EventSender.Event.START_PLUGIN);
     }
 

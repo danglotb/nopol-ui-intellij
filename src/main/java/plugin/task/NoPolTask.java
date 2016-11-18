@@ -70,7 +70,7 @@ public class NoPolTask extends Task.Backgroundable {
 
 	@Override
 	public void run(@NotNull ProgressIndicator progressIndicator) {
-		if (!ActorManager.nopolIsRunning && ActorManager.runNopolLocally) {
+		if (ActorManager.runNopolLocally) {
 			ActorManager.launchNopol();
 		}
 		Timeout timeout = new Timeout(200000);

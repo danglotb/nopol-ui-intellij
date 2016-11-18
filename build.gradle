@@ -23,6 +23,7 @@ dependencies {
 
     bundle "com.typesafe.akka:akka-actor_2.11:2.3-SNAPSHOT"
     bundle files ("lib/nopol-0.2-SNAPSHOT.jar")
+    bundle files ("lib/nopol-server-0.2-SNAPSHOT.jar")
     bundle "com.typesafe.akka:akka-remote_2.11:2.3-SNAPSHOT"
     compile configurations.bundle
 
