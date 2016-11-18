@@ -19,6 +19,9 @@ public class LaunchPanel extends JPanel {
 	private static final String REMOTE_DESCRIPTION = "Send a request to the nopol-server with the project";
 	private static final String CUSTOM_DESCRIPTION = "You can run your own nopol-server, by specifying the ip address";
 
+	private static final String GLOBAL_DESCRIPTION = "Nopol will try to fix a bug, by changing a condition or "
+			+ "by adding a precondition. This is based on the test suite that you use.";
+
 	public LaunchPanel() {
 		this.setVisible(true);
 		this.buildGroupType();
@@ -30,7 +33,11 @@ public class LaunchPanel extends JPanel {
 	private void buildGroupType() {
 		ButtonGroup buttonGroup = new ButtonGroup();
 		JPanel globalPanel = new JPanel();
-		globalPanel.setLayout(new GridLayout(2,1));
+		globalPanel.setLayout(new GridLayout(3,1));
+
+		JLabel labelGlobalDescription = new JLabel();
+		labelGlobalDescription.setText(GLOBAL_DESCRIPTION);
+		globalPanel.add(labelGlobalDescription);
 
 		this.labelDescriptionNopol = new JLabel();
 		this.labelDescriptionNopol.setText(LOCAL_DESCRIPTION);

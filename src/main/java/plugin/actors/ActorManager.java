@@ -46,7 +46,6 @@ public class ActorManager {
             final String cmd = "java -cp " + pathToToolsJar + ":" + pathToNopolJar + " " + fullQualifiedNameMain;
             nopolProcess = Runtime.getRuntime().exec(cmd);
             nopolIsRunning = true;
-            Thread.sleep(3000);
         } catch (Exception ignored) {
             nopolIsRunning = false;
             //should give to the client the reason that we could not run nopol locally
