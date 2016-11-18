@@ -3,6 +3,7 @@ package plugin.action;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
+import plugin.EventSender;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +37,7 @@ public class ActionGenerator implements ActionListener {
 			}
 			project.getBaseDir().refresh(false, true);
 			buildModule();
+			EventSender.send(EventSender.Event.GENERATE_TOY_PROJECT);
 		}
 
 		private void buildModule() {

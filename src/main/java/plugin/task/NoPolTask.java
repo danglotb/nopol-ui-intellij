@@ -14,6 +14,7 @@ import fr.inria.lille.repair.nopol.NoSuspiciousStatementException;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import plugin.EventSender;
 import plugin.Plugin;
 import plugin.actors.ActorManager;
 import plugin.wrapper.ApplyPatchWrapper;
@@ -67,6 +68,7 @@ public class NoPolTask extends Task.Backgroundable {
 	@Override
 	public void run(@NotNull ProgressIndicator progressIndicator) {
 		Timeout timeout = new Timeout(200000);
+		EventSender.send(EventSender.Event.REPAIR_ATTEMPT);
 		try {
 			ConfigActor configActor = new ConfigActor(config, Files.readAllBytes(Paths.get(outputZip)));
 			this.future = Patterns.ask(ActorManager.remoteActor, configActor, timeout);
@@ -102,6 +104,7 @@ public class NoPolTask extends Task.Backgroundable {
 			if (patches.isEmpty())
 				Messages.showMessageDialog(getProject(), "NoPol could not found any fix", "Fail", Messages.getErrorIcon());
 			else {
+				EventSender.send(EventSender.Event.REPAIR_SUCCESS);
 				ApplyPatchWrapper dialog = new ApplyPatchWrapper(getProject(), patches);
 				dialog.getPeer().setTitle("NoPol");
 				dialog.show();
