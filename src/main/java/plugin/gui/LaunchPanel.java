@@ -15,12 +15,12 @@ public class LaunchPanel extends JPanel {
 
 	private JLabel labelDescriptionNopol;
 
-	private static final String LOCAL_DESCRIPTION = "Start a nopol-server locally, and try to find a patch on it";
-	private static final String REMOTE_DESCRIPTION = "Send a request to the nopol-server with the project";
-	private static final String CUSTOM_DESCRIPTION = "You can run your own nopol-server, by specifying the ip address";
+	private static final String LOCAL_DESCRIPTION = "Start a Nopol server locally and use it, may load your machine";
+	private static final String REMOTE_DESCRIPTION = "Ask Inria's Nopol server to find a patch, goes fast but requires good network and non-confidential data";
+	private static final String CUSTOM_DESCRIPTION = "Use a custom Nopol server, identified by its IP address";
 
-	private static final String GLOBAL_DESCRIPTION = "Nopol will try to fix a bug, by changing a condition or "
-			+ "by adding a precondition. This is based on the test suite that you use.";
+	private static final String GLOBAL_DESCRIPTION = "Nopol tries to fix the failing test case, by either changing an existing if-condition or "
+			+ "by adding a statement precondition (ie inserting a new if).";
 
 	public LaunchPanel() {
 		this.setVisible(true);
