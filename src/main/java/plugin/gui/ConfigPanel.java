@@ -31,11 +31,12 @@ public class ConfigPanel extends JPanel {
 	private void buildGroupSynthesis() {
 
 		JRadioButton dynamothSynthesis = new JRadioButton();
-		dynamothSynthesis.setSelected(true);
+		dynamothSynthesis.setSelected(config.getSynthesis() == Config.NopolSynthesis.DYNAMOTH);
 		dynamothSynthesis.setActionCommand(String.valueOf(Config.NopolSynthesis.DYNAMOTH));
 		dynamothSynthesis.addActionListener(event -> config.setSynthesis(Config.NopolSynthesis.DYNAMOTH));
 
 		JRadioButton smtSynthesis = new JRadioButton();
+		smtSynthesis.setSelected(config.getSynthesis() == Config.NopolSynthesis.SMT);
 		smtSynthesis.setActionCommand(String.valueOf(Config.NopolSynthesis.SMT));
 		smtSynthesis.addActionListener(event -> config.setSynthesis(Config.NopolSynthesis.SMT));
 
