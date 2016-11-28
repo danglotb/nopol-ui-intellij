@@ -67,8 +67,8 @@ public class LaunchPanel extends JPanel {
 		JRadioButton buttonInria = new JRadioButton();
 		buttonInria.addActionListener(event -> {
 			ActorManager.runNopolLocally = false;
-			ActorManager.addressNopol = ActorManager.akkaConfigNoPol.getString("akka.remote.netty.tcp.hostname");
-			ActorManager.portNopol = ActorManager.akkaConfigNoPol.getString("akka.remote.netty.tcp.port");
+			ActorManager.addressNopol = ActorManager.akkaConfig.getString("akka.remote.netty.tcp.hostname");
+			ActorManager.portNopol = ActorManager.akkaConfig.getString("akka.remote.netty.tcp.port");
 		});
 		panelInria.add(buttonInria);
 		panelInria.add(new JLabel("Remote Inria"));
