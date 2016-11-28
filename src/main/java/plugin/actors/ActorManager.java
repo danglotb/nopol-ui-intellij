@@ -18,13 +18,12 @@ import java.util.Properties;
 public class ActorManager {
 
     public static void createActorSystem(ClassLoader classLoader) {
-        akkaConfigNoPol = ConfigFactory.load(classLoader, "nopol");
         akkaConfig = ConfigFactory.load(classLoader, "common");
 
-        actorSystemNopol = akkaConfigNoPol.getString("nopol.system.name");
-        addressNopol = akkaConfigNoPol.getString("akka.remote.netty.tcp.hostname");
-        portNopol = akkaConfigNoPol.getString("akka.remote.netty.tcp.port");
-        nameActorNopol = akkaConfigNoPol.getString("nopol.actor.name");
+        actorSystemNopol = akkaConfig.getString("nopol.system.name");
+        addressNopol = akkaConfig.getString("nopol.akka.remote.netty.tcp.hostname");
+        portNopol = akkaConfig.getString("nopol.akka.remote.netty.tcp.port");
+        nameActorNopol = akkaConfig.getString("nopol.actor.name");
 
         system = ActorSystem.create("PluginActorSystem", akkaConfig, classLoader);
         remoteActor = system.actorFor("akka.tcp://" + actorSystemNopol + "@" + addressNopol + ":" + portNopol + "/user/" + nameActorNopol);
@@ -77,7 +76,6 @@ public class ActorManager {
     public static String nameActorNopol;
 
     public static Config akkaConfig;
-    public static Config akkaConfigNoPol;
 
     public static boolean runNopolLocally = true;
     public static boolean nopolIsRunning = false;
