@@ -19,12 +19,13 @@ repositories {
 dependencies {
     compile "com.typesafe.akka:akka-actor_2.11:2.3-SNAPSHOT"
     compile files ("lib/nopol-0.2-SNAPSHOT.jar")
+    compile files ("lib/nopol-server-0.2-SNAPSHOT.jar")
     compile "com.typesafe.akka:akka-remote_2.11:2.3-SNAPSHOT"
 }
 
 intellij {
     publish {
-        username 'nopol-bot-usename'
-        password 'password'
+        username "$System.env.USER"
+        password "$System.env.PASSWORD"
     }
 }
