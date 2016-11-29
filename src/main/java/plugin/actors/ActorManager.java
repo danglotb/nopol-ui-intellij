@@ -26,14 +26,11 @@ public class ActorManager {
         nameActorNopol = akkaConfig.getString("nopol.actor.name");
 
         system = ActorSystem.create("PluginActorSystem", akkaConfig, classLoader);
-        remoteActor = system.actorFor("akka.tcp://" + actorSystemNopol + "@" + addressNopol + ":" + portNopol + "/user/" + nameActorNopol);
-        System.out.println(remoteActor);
+        buildRemoteActor("127.0.0.1", "2553");
     }
 
     public static void buildRemoteActor(String address, String port) {
-        addressNopol = address;
-        portNopol = port;
-        remoteActor = system.actorFor("akka.tcp://" + actorSystemNopol + "@" + addressNopol + ":" + portNopol + "/user/" + nameActorNopol);
+        remoteActor = system.actorFor("akka.tcp://" + actorSystemNopol + "@" + address + ":" + port + "/user/" + nameActorNopol);
         System.out.println(remoteActor);
     }
 
