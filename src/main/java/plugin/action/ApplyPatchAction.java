@@ -32,7 +32,6 @@ public class ApplyPatchAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		final Project project = this.parent.getProject();
 		PsiElement buggyElement = this.parent.getBuggyElement();
-		final PsiStatement patchStatement = this.parent.getPatchStatement();
 		final Patch selectedPatch = this.parent.getSelectedPatch();
 
 		PsiClass classToBeFix = JavaPsiFacade.getInstance(project).findClass(selectedPatch.getRootClassName(), new EverythingGlobalScope(project));
@@ -44,12 +43,12 @@ public class ApplyPatchAction extends AbstractAction {
 
 		if (selectedPatch.getType() == StatementType.CONDITIONAL) {
 			buggyElement = ((PsiIfStatement) buggyElement).getCondition();
-			patch = patchStatement.getText();
+			patch = selectedPatch.asString();
 		} else {
 			String newline = FileDocumentManager.getInstance().getFile(modifiedDocument).getDetectedLineSeparator();
 			StringBuilder sb = new StringBuilder();
 			sb.append("if( ");
-			sb.append(patchStatement.getText());
+			sb.append(selectedPatch.asString());
 			sb.append(" ) {" + newline);
 			sb.append(buggyElement.getText() + newline);
 			sb.append("}");

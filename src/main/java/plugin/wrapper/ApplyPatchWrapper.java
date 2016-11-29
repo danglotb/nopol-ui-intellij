@@ -30,10 +30,6 @@ public class ApplyPatchWrapper extends DialogWrapper {
 		return selectedPatch;
 	}
 
-	public PsiStatement getPatchStatement() {
-		return patchStatement;
-	}
-
 	public PsiElement getBuggyElement() {
 		return buggyElement;
 	}
@@ -89,7 +85,6 @@ public class ApplyPatchWrapper extends DialogWrapper {
 	public void setSelectedPatch(Patch selectedPatch) {
 		System.out.println(selectedPatch.asString() + " selected! ");
 		this.selectedPatch = selectedPatch;
-		this.patchStatement = JavaPsiFacade.getElementFactory(this.project).createStatementFromText(this.selectedPatch.asString(), null);
 		final SourceLocation location = this.selectedPatch.getSourceLocation();
 		PsiClass classToBeFix = JavaPsiFacade.getInstance(this.project).findClass(this.selectedPatch.getRootClassName(), new EverythingGlobalScope(this.project));
 		classToBeFix.accept(new JavaRecursiveElementVisitor() {

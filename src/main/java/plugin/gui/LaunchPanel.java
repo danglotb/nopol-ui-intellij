@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import static plugin.actors.ActorManager.buildRemoteActor;
+
 /**
  * Created by bdanglot on 9/21/16.
  */
@@ -59,6 +61,7 @@ public class LaunchPanel extends JPanel {
 		localButton.addActionListener(event -> {
 			this.labelDescriptionNopol.setText(LOCAL_DESCRIPTION);
 			ActorManager.runNopolLocally = true;
+			buildRemoteActor("127.0.0.1", "2553");
 		});
 		panelLocal.add(localButton);
 		panelLocal.add(new JLabel("Local"));
@@ -78,7 +81,7 @@ public class LaunchPanel extends JPanel {
 			this.labelDescriptionNopol.setText(CUSTOM_DESCRIPTION);
 			ActorManager.runNopolLocally = false;
 			String[] input = adrCustom.getText().split(":");
-			ActorManager.buildRemoteActor(input[0], input[1]);
+			buildRemoteActor(input[0], input[1]);
 		});
 		adrCustom.addKeyListener(getKeyAdapter(adrCustom));
 		buttonGroup.add(customButton);
@@ -93,8 +96,7 @@ public class LaunchPanel extends JPanel {
 		buttonInria.addActionListener(event -> {
 			this.labelDescriptionNopol.setText(REMOTE_DESCRIPTION);
 			ActorManager.runNopolLocally = false;
-			ActorManager.addressNopol = ActorManager.akkaConfigNoPol.getString("akka.remote.netty.tcp.hostname");
-			ActorManager.portNopol = ActorManager.akkaConfigNoPol.getString("akka.remote.netty.tcp.port");
+			buildRemoteActor(ActorManager.addressNopol, ActorManager.portNopol);
 		});
 		panelInria.add(buttonInria);
 		panelInria.add(new JLabel("Remote Inria"));
@@ -109,7 +111,7 @@ public class LaunchPanel extends JPanel {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == 1) {
 					String[] input = adrCustom.getText().split(":");
-					ActorManager.buildRemoteActor(input[0], input[1]);
+					buildRemoteActor(input[0], input[1]);
 				}
 			}
 		};
