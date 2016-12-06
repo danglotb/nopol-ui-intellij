@@ -1,5 +1,12 @@
+buildscript {
+    repositories {
+        maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
+    }
+}
+
 plugins {
-  id 'java'
+    id 'java'
+    id "org.jetbrains.intellij" version "0.1.10"
 }
 
 repositories {
@@ -9,120 +16,16 @@ repositories {
     }
 }
 
-// Pick the Linux version, as it is a tar.gz we can simply extract
-def IDEA_SDK_URL = 'https://download.jetbrains.com/idea/ideaIC-2016.2.5.tar.gz'
-def IDEA_SDK_NAME = 'IntelliJ IDEA Community Edition IC-162.2032.8'
-
-configurations {
-    ideaSdk
-    bundle // dependencies bundled with the plugin
-}
-
 dependencies {
-    ideaSdk fileTree(dir: 'lib/sdk/', include: ['*/lib/*.jar'])
-
-    bundle "com.typesafe.akka:akka-actor_2.11:2.3-SNAPSHOT"
-    bundle files ("lib/nopol-0.2-SNAPSHOT.jar")
-    bundle files ("lib/nopol-server-0.2-SNAPSHOT.jar")
-    bundle "com.typesafe.akka:akka-remote_2.11:2.3-SNAPSHOT"
-    compile configurations.bundle
-
-    compile configurations.ideaSdk
-    compile configurations.bundle
+    compile "com.typesafe.akka:akka-actor_2.11:2.3-SNAPSHOT"
+    compile files ("lib/nopol-0.2-SNAPSHOT.jar")
+    compile files ("lib/nopol-server-0.2-SNAPSHOT.jar")
+    compile "com.typesafe.akka:akka-remote_2.11:2.3-SNAPSHOT"
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-task downloadIdeaSdk(type: Download) {
-    sourceUrl = IDEA_SDK_URL
-    target = file('lib/idea-sdk.tar.gz')
-}
-
-task extractIdeaSdk(type: Copy, dependsOn: [downloadIdeaSdk]) {
-    def zipFile = file('lib/idea-sdk.tar.gz')
-    def outputDir = file("lib/sdk")
-
-    from tarTree(resources.gzip(zipFile))
-    into outputDir
-}
-
-test {
-    // Avoid parallel execution, since the IntelliJ boilerplate is not up to that
-    maxParallelForks = 1
-}
-
-task dist(type: Zip, dependsOn: [jar, test]) {
-    from configurations.bundle
-    from jar.archivePath
-    rename { f -> "lib/${f}" }
-    into project.name
-    baseName project.name
-}
-
-compileJava.dependsOn extractIdeaSdk
-build.dependsOn dist
-
-// ========= Workspace setup tasks ========= //
-
-apply plugin: 'idea'
-
-idea {
-    project {
-        languageLevel = '1.8'
-        jdkName = IDEA_SDK_NAME
-
-        ipr {
-            withXml {
-                it.node.find { node ->
-                    node.@name == 'ProjectRootManager'
-                }.'@project-jdk-type' = 'IDEA JDK'
-
-                logger.warn "=" * 71
-                logger.warn " Configured IDEA JDK '${jdkName}'."
-                logger.warn " Make sure you have it configured IntelliJ before opening the project!"
-                logger.warn "=" * 71
-            }
-        }
-    }
-
-    module {
-        scopes.COMPILE.minus = [ configurations.ideaSdk ]
-
-        iml {
-            beforeMerged { module ->
-                module.dependencies.clear()
-            }
-            withXml {
-                it.node.@type = 'PLUGIN_MODULE'
-                //  <component name="DevKit.ModuleBuildProperties" url="file://$MODULE_DIR$/src/main/resources/META-INF/plugin.xml" />
-                def cmp = it.node.appendNode('component')
-                cmp.@name = 'DevKit.ModuleBuildProperties'
-                cmp.@url = 'file://$MODULE_DIR$/src/main/resources/META-INF/plugin.xml'
-            }
-        }
-    }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.0'
-}
-
-// ========= Custom tasks ========= //
-
-class Download extends DefaultTask {
-    @Input
-    String sourceUrl
-
-    @OutputFile
-    File target
-
-    @TaskAction
-    void download() {
-        if (!target.parentFile.exists()) {
-           target.parentFile.mkdirs()
-        }
-        logger.lifecycle "Downloading ${sourceUrl}, this might take a minute..."
-        ant.get(src: sourceUrl, dest: target, skipexisting: 'true')
+intellij {
+    publish {
+        username "$System.env.USER"
+        password "$System.env.PASSWORD"
     }
 }

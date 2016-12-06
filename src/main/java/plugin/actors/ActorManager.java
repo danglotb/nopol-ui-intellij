@@ -42,6 +42,7 @@ public class ActorManager {
             final String cmd = "java -cp " + pathToToolsJar + ":" + pathToNopolJar + " " + fullQualifiedNameMain;
             nopolProcess = Runtime.getRuntime().exec(cmd);
             nopolIsRunning = true;
+            remoteActor = system.actorFor("akka.tcp://NopolActorSystem@127.0.0.1:2553/user/NopolActor");
         } catch (Exception ignored) {
             nopolIsRunning = false;
             //should give to the client the reason that we could not run nopol locally

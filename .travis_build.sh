@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-./gradlew dist
+./gradlew buildPlugin
 
 cd build/distributions
 unzip "nopol-ui-intellij.zip"
 cd nopol-ui-intellij/lib
 count=$(ls | wc -l)
 
-[[ "$count" == 10 ]]
+[[ "$count" == 9 ]]
