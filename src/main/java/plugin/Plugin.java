@@ -29,8 +29,13 @@ public class Plugin extends AnAction {
 
     public Plugin() {
         super("NoPol");
-        ActorManager.createActorSystem(getClass().getClassLoader());
+        ActorManager.createActorSystem(Plugin.class.getClassLoader());
         ProjectManager.getInstance().addProjectManagerListener(new ProjectManagerAdapter() {
+            @Override
+            public void projectOpened(Project project) {
+                ActorManager.launchNopol();
+            }
+
             @Override
             public void projectClosed(Project project) {
                 ActorManager.stopNopolLocally();
@@ -42,11 +47,10 @@ public class Plugin extends AnAction {
             throw new RuntimeException(e);
         }
         initConfig();
-        ActorManager.launchNopol();
         EventSender.send(EventSender.Event.START_PLUGIN);
     }
 
-    private void initConfig() {
+    private static void initConfig() {
         config.setSynthesis(Config.NopolSynthesis.DYNAMOTH);
         config.setType(StatementType.PRE_THEN_COND);
 //        config.setLocalizer(Config.NopolLocalizer.OCHIAI); //CoCospoon take too much time

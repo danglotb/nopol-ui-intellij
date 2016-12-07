@@ -45,6 +45,7 @@ public class ActorManager {
             remoteActor = system.actorFor("akka.tcp://NopolActorSystem@127.0.0.1:2553/user/NopolActor");
         } catch (Exception ignored) {
             nopolIsRunning = false;
+            throw new RuntimeException(ignored);
             //should give to the client the reason that we could not run nopol locally
         }
     }

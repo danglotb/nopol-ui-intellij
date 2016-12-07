@@ -52,8 +52,14 @@
     <actions>
         <group id="nopol-plugin.NoPolMenu" text="Nopol" description="Nopol menu">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-            <action class="plugin.Plugin" id="nopol-plugin.Plugin"
+            <action class="plugin.Plugin" id="nopol-plugin.PluginEditor"
                     text="Nopol" description="Configure and run Nopol">
+            </action>
+        </group>
+        <group id="nopol-plugin.GeneratorMenu" text="Generate toy-project" description="Generate toy project">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
+            <action class="plugin.Generator" id="nopol-plugin.GeneratorProjectView"
+                    text="Generate toy-project" description="Generate a toy-project to try the plugin">
             </action>
         </group>
     </actions>
