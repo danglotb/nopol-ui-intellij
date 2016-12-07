@@ -2,16 +2,30 @@
     <id>fr.inria.lille.spirals.repair</id>
     <name>Nopol-Plugin</name>
     <version>1.0</version>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">Inria</vendor>
+    <vendor email="librepair@inria.fr" url="https//github.com/SpoonLabs/nopol-ui-intellij.git">Inria</vendor>
 
     <description><![CDATA[
-      Enter short description for your plugin here.<br>
-      <em>most HTML tags may be used</em>
+        <strong>Nopol User Interface Intellij</strong>
+
+        <b>What this plugin does?</b>
+        This plugin allows to automatically fix program by changing condition (if) or by adding a pre-condition, using a failing
+        test case, and others success test cases. Using <a href="">Nopol</a> and its server, you can run it on your own computer, or
+        ask for support on the librepair infrastructure.
+
+        <b>How?</b>
+        From a failling test cases, Nopol is able to propose a patch that will make your test case green.
+
+        <b>Librepair</b>
+        The librepair project is within the spirals team at Inria, which is a french research institute.
+
+    further information: <a href="https://github.com/SpoonLabs/nopol">nopol</a>,<a href="https://github.com/SpoonLabs/nopol-ui-intellij">nopol-ui-intellij</a>,<a href="https://team.inria.fr/spirals/">spirals</a>
+
+        <b>Contributions</b>
+        Found a bug? You want to contribute? Any questions? Do not hesitate to open issues or pull-request on the <a href="https://github.com/SpoonLabs/nopol-ui-intellij">github repositories</a>.
     ]]></description>
 
     <change-notes><![CDATA[
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>
+        <a href="https://github.com/SpoonLabs/nopol-ui-intellij/commits/master">Change-notes</a>
     ]]>
     </change-notes>
 
@@ -28,10 +42,10 @@
     <extensions defaultExtensionNs="com.intellij"></extensions>
 
     <actions>
-        <group id="nopol-plugin.NoPolMenu" text="Nopol" description="NoPol menu">
+        <group id="nopol-plugin.NoPolMenu" text="Nopol" description="Nopol menu">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
             <action class="plugin.Plugin" id="nopol-plugin.Plugin"
-                    text="NoPol" description="Configure and run NoPol">
+                    text="Nopol" description="Configure and run Nopol">
             </action>
         </group>
     </actions>
