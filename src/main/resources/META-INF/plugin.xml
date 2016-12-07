@@ -5,23 +5,31 @@
     <vendor email="librepair@inria.fr" url="https//github.com/SpoonLabs/nopol-ui-intellij.git">Inria</vendor>
 
     <description><![CDATA[
-        <strong>Nopol User Interface Intellij</strong>
+        <strong>Automatic repair of bugs with Nopol</strong>
 
         <b>What this plugin does?</b>
-        This plugin allows to automatically fix program by changing condition (if) or by adding a pre-condition, using a failing
-        test case, and others success test cases. Using <a href="">Nopol</a> and its server, you can run it on your own computer, or
-        ask for support on the librepair infrastructure.
+        This plugin allows you to automatically fix your program based on the test suite. The fix is done by
+        either changing an if-condition or by adding a pre-condition (adding an if before a statement). The fix search
+        is driven by the failing
+        test case trigerring the bug, and the other successful test cases. 
 
-        <b>How?</b>
-        From a failling test cases, Nopol is able to propose a patch that will make your test case green.
+        <b>How to use it?</b>
+        As soon as you have a failing test case, right-click on the test class, and select "Nopol", and then "Fix Me" (the default configuration should work). 
+        The other configuration options are explained in the <a href="https://github.com/SpoonLabs/nopol-ui-intellij">Readme</a>.
 
-        <b>Librepair</b>
-        The librepair project is within the spirals team at Inria, which is a french research institute.
+        To getting started, you can generate a toy module that contains a failing test case (Right Click >> Nopol >> Preferences >> generate toy project).
 
-    further information: <a href="https://github.com/SpoonLabs/nopol">nopol</a>,<a href="https://github.com/SpoonLabs/nopol-ui-intellij">nopol-ui-intellij</a>,<a href="https://team.inria.fr/spirals/">spirals</a>
+        <b>How it works?</b>
+        Nopol performs static and dynamic analysis of the failling and passing test cases.
+        WHen Nopol succeeds to find a patch, all tests are passing / green.
+
+        <b>Authors</b>
+        The librepair project is a project of the SPIRALS research group at Inria Lille (a French research institute).
+
+         More information: <a href="https://github.com/SpoonLabs/nopol">nopol</a>,<a href="https://github.com/SpoonLabs/nopol-ui-intellij">nopol-ui-intellij</a>,<a href="https://team.inria.fr/spirals/">spirals</a>
 
         <b>Contributions</b>
-        Found a bug? You want to contribute? Any questions? Do not hesitate to open issues or pull-request on the <a href="https://github.com/SpoonLabs/nopol-ui-intellij">github repositories</a>.
+        Found a bug? Want to contribute? Any question? Do not hesitate to open issues or pull-requests on the <a href="https://github.com/SpoonLabs/nopol-ui-intellij">github repositories</a>.
     ]]></description>
 
     <change-notes><![CDATA[
